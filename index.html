@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="YouTube Video Replay"
+    />
+    
+    <link rel="stylesheet" href="./css/nouislider.min.css">
+    <link href="css/style.css" rel="stylesheet">
+
+
+    
+
+
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<link rel="stylesheet" href=" https://unpkg.com/@material-ui/core@latest/umd/material-ui.production.min.js">
+<!-- Compiled and minified JavaScript -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+
+    <title>YouTube Video Riplay </title>
+    <style>
+      /* #slider-margin-value-min */
+      .player{
+        position: absolute;
+        width: 100%;
+        margin-top: 70px;
+        z-index: 999;
+      } 
+      
+      @media only screen and (max-width: 720px) {
+        .iFrame iframe{
+          max-width: 70%;
+        }
+      }
+      
+      .noUi-connects{
+        background-color:#6fd4c1 ;
+      }
+      
+    </style>
+  </head>
+  <body>
+
+    <div class="player">
+      <div class="col-md-8 offset-md-2 ">
+        <div class="col-md-8 offset-md-2 d-flex mb-5">
+          <input  placeholder="Enter a Youtebe video link" class="form-control" type="" name="video" id="myInput">
+          <button style="margin-left: 20px;" class="btn btn-success" id="player">Play</button>
+        </div>
+        <div class="text-center ">
+          <div style="display: inline-block;" class="iFrame">
+            <div  id="ytplayer"></div>
+          </div>
+        </div>
+      </div>
+      
+    <div class="container-fluid">
+      <div class="row">
+          <div style="display: none;" class="col-md-8  offset-md-2">
+              <div class="card">
+                  <div class="card-body">
+                      <h4 class="card-title mb-5">Basic slider</h4>
+                      <div id="basic-slider"></div>
+                  </div>
+              </div>
+          </div>    
+          <div class="col-md-8 offset-md-2 ">
+              <div class="card">
+                  <div class="card-body">
+                      <div class="margin-slider">
+                          <p>Total Time: <span  id="totalTime"></span> Selected Time : <span id="selected"></span> </p>
+                          <div id="slider-margin"></div>
+                          <span class="example-val" id="slider-margin-value-min"></span>
+                          <span class="example-val" id="slider-margin-value-max"></span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div style="display: none;" class="col-md-8 col-lg-2">
+              <div class="card">
+                  <div class="card-body">
+                      <div class="stepping-slider">
+                          <div id="slider-step"></div>
+                          <span class="example-val" id="slider-step-value"></span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+       </div>
+  </div>
+  
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="js/common.min.js"></script>
+    <script src="js/custom.min.js"></script> 
+    <script src="js/settings.js"></script>
+    <script src="js/gleek.js"></script>
+    <script src="js/styleSwitcher.js"></script>
+    <script src="./js/nouislidder.min.js"></script>
+    <script src="./js/wNumb.js"></script>
+    <script src="./js/nouislider-init.js"></script>
+    <script>
+      
+      function getInputValue(){
+        var inputVal = document.getElementById("myInput").value;
+        function youtube_parser(url){
+            var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            var match = url.match(regExp);
+            return (match&&match[7].length==11)? match[7] : false;
+        }
+        var videoID= youtube_parser(inputVal)
+        localStorage.setItem('getVideoID',videoID)
+        window.location.href='/'
+      }
+      
+    $('#player').click(function() {
+      getInputValue()
+    });
+
+    // Load the IFrame Player API code asynchronously.
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/player_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // Replace the 'ytplayer' element with an <iframe> and
+    // YouTube player after the API code downloads.
+    var player;
+    function onYouTubePlayerAPIReady() {
+        player = new YT.Player('ytplayer', {
+        height: '360',
+        width: '640',
+        videoId: localStorage.getItem('getVideoID')?localStorage.getItem('getVideoID'):'jhkfExFG2B8',
+        seekTo:0,
+        autoplay: 1,
+        loop: 1,
+        });
+    }
+    var mode=true
+    function plaVideo(){
+        player.playVideo()
+    }
+    function start(){
+      var c=0
+      setInterval(() => {
+        player.playVideo()
+        c++
+        if(c>20){
+          clearInterval
+        }
+      }, 200);
+    }
+    var c=0
+      funky = setInterval(function() {
+        player.playVideo()
+        c++
+      }, 200);
+      setInterval(() => {
+
+        if(c>15){
+        clearInterval(funky);
+        }
+      }, 200);
+    $('#sk').click(function() {
+      seek()
+    });
+    
+    function seeter(){
+      var time =player.getDuration()
+      time =Math.round(time)
+      var minutes = Math.floor(time / 60)
+      var seconds = time - minutes * 60;
+      var avarageTime =(minutes*60)+seconds
+      document.getElementById("totalTime").innerHTML = `${minutes}:${seconds}`
+      setInterval(() => {
+        if(player.getCurrentTime()>(avarageTime-1)){
+          player.playVideo()
+        }
+      }, 200);
+    }
+    function seek(){
+        player.seekTo(0)
+    }
+    setInterval(() => {
+      seeter()
+    }, 200);
+    
+    setInterval(() => {
+      
+      var time =player.getDuration()
+      time =Math.round(time)
+      var minutes = Math.floor(time / 60)
+      var seconds = time - minutes * 60;
+      var avarageTime =(minutes*60)+seconds //seconds
+      var onePersentInSeconds=avarageTime/100
+      var valueOne=parseInt( document.getElementById('slider-margin-value-min').innerHTML)
+      var valueTwo =parseInt( document.getElementById('slider-margin-value-max').innerHTML)
+      var range1=valueOne*onePersentInSeconds
+      var range2=valueTwo*onePersentInSeconds
+      
+        localStorage.setItem('range1',range1)
+        localStorage.setItem('range2',range2)  
+      var getVideoID=localStorage.getItem('getVideoID')
+      var selectedTime=((valueTwo-valueOne)*onePersentInSeconds)
+      var selectedMinute= parseInt(selectedTime/60)
+      var selectedSeconds=parseInt( selectedTime%60)
+      document.getElementById('selected').innerHTML=`${selectedMinute}:${selectedSeconds<10?'0':''}${selectedSeconds}`
+      var currentTime =player.getCurrentTime()
+      if(currentTime>range2){
+        player.seekTo(range1)
+      }
+    }, 10);
+function  velueSet(){
+  
+  var time =player.getDuration()
+    time =Math.round(time)
+    var minutes = Math.floor(time / 60)
+    var seconds = time - minutes * 60;
+    var avarageTime =(minutes*60)+seconds //seconds
+    var onePersentInSeconds=avarageTime/100
+
+    var valueOne=parseInt( document.getElementById('slider-margin-value-min').innerHTML)
+    var valueTwo =parseInt( document.getElementById('slider-margin-value-max').innerHTML)
+    var playedrange1=valueOne*onePersentInSeconds
+    var playedrange2=valueTwo*onePersentInSeconds
+    localStorage.setItem('playedrange1',playedrange1)
+    localStorage.setItem('playedrange2',playedrange2)
+}
+velueSet()
+    setInterval(() => {
+      var playedrange1= localStorage.getItem('playedrange1')
+      var playedrange2= localStorage.getItem('playedrange2')
+      var range1= localStorage.getItem('range1')
+      var range2= localStorage.getItem('range2')
+      console.log(playedrange1,playedrange2, range1, range2)
+      console.log('doing')
+      if(range1!==playedrange1){
+        player.seekTo(parseInt(range1))
+      }
+    }, 10);
+    </script>
+  </body>
+</html>
+
+<!-- https://www.youtube.com/watch?v=IGQBtbKSVhY -->
