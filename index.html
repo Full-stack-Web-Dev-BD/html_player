@@ -86,7 +86,7 @@
           <div class="col-md-8 offset-md-2 ">
               <div class="">
                 <div class="margin-slider">
-                    <p style="align-items: center;" class=" d-flex">Total Time: <span  id="totalTime"></span> Selected Time : <span id="selected"></span>
+                    <p style="align-items: center;" class=" d-flex"><span >Total Time:</span> <span   id="totalTime"> </span><span class="ml-3"> Selected Time :</span> <span id="selected"> </span>
                       <button style="margin-left: 20px;" class="btn btn-success" id="replay">Replay</button>
                      </p>
                     <div id="slider-margin"></div>
@@ -110,7 +110,6 @@
   </div>
   
     </div>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="js/common.min.js"></script>
     <script src="js/custom.min.js"></script> 
@@ -239,7 +238,7 @@
       if(currentTime>range2){
         player.seekTo(range1)
       }
-    }, 10);
+    }, 200);
     </script>
   </body>
 </html>
