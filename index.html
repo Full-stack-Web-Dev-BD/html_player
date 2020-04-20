@@ -26,7 +26,12 @@
 
     <title>YouTube Video Riplay </title>
     <style>
-      /* #slider-margin-value-min */
+      #slider-margin-value-min{
+        display: none;
+      }
+      #slider-margin-value-max{
+        display: none;
+      }
       .player{
         position: absolute;
         width: 100%;
@@ -47,7 +52,14 @@
     </style>
   </head>
   <body>
-
+    <nav>
+      <div class="nav-wrapper" style="
+      background: gainsboro !important">
+        <img class="brand-logo center" style="max-width: 100px;margin-top: 10px;" src="./image/logo.png" alt="">
+        <ul class="left hide-on-med-and-down">
+        </ul>
+      </div>
+    </nav>
     <div class="player">
       <div class="col-md-8 offset-md-2 ">
         <div class="col-md-8 offset-md-2 d-flex mb-5">
@@ -72,15 +84,16 @@
               </div>
           </div>    
           <div class="col-md-8 offset-md-2 ">
-              <div class="card">
-                  <div class="card-body">
-                      <div class="margin-slider">
-                          <p>Total Time: <span  id="totalTime"></span> Selected Time : <span id="selected"></span> </p>
-                          <div id="slider-margin"></div>
-                          <span class="example-val" id="slider-margin-value-min"></span>
-                          <span class="example-val" id="slider-margin-value-max"></span>
-                      </div>
-                  </div>
+              <div class="">
+                <div class="margin-slider">
+                    <p style="align-items: center;" class=" d-flex">Total Time: <span  id="totalTime"></span> Selected Time : <span id="selected"></span>
+                      <button style="margin-left: 20px;" class="btn btn-success" id="replay">Replay</button>
+                     </p>
+                    <div id="slider-margin"></div>
+                    <span class="example-val" id="slider-margin-value-min"></span>
+                    <span class="example-val" id="slider-margin-value-max"></span>
+                    <p style="text-transform: capitalize; margin-top: 15px;" >Please select Time  and  click on Replay button to replay</p>
+                </div>
               </div>
           </div>
           <div style="display: none;" class="col-md-8 col-lg-2">
@@ -158,6 +171,16 @@
         }
       }, 200);
     }
+    
+  function  replay(){
+      var range1 =localStorage.getItem('range1')
+      player.seekTo(parseInt(range1))
+  }
+  
+  $('#replay').click(function() {
+      replay()
+    });
+
     var c=0
       funky = setInterval(function() {
         player.playVideo()
@@ -205,7 +228,6 @@
       var valueTwo =parseInt( document.getElementById('slider-margin-value-max').innerHTML)
       var range1=valueOne*onePersentInSeconds
       var range2=valueTwo*onePersentInSeconds
-      
         localStorage.setItem('range1',range1)
         localStorage.setItem('range2',range2)  
       var getVideoID=localStorage.getItem('getVideoID')
@@ -216,34 +238,6 @@
       var currentTime =player.getCurrentTime()
       if(currentTime>range2){
         player.seekTo(range1)
-      }
-    }, 10);
-function  velueSet(){
-  
-  var time =player.getDuration()
-    time =Math.round(time)
-    var minutes = Math.floor(time / 60)
-    var seconds = time - minutes * 60;
-    var avarageTime =(minutes*60)+seconds //seconds
-    var onePersentInSeconds=avarageTime/100
-
-    var valueOne=parseInt( document.getElementById('slider-margin-value-min').innerHTML)
-    var valueTwo =parseInt( document.getElementById('slider-margin-value-max').innerHTML)
-    var playedrange1=valueOne*onePersentInSeconds
-    var playedrange2=valueTwo*onePersentInSeconds
-    localStorage.setItem('playedrange1',playedrange1)
-    localStorage.setItem('playedrange2',playedrange2)
-}
-velueSet()
-    setInterval(() => {
-      var playedrange1= localStorage.getItem('playedrange1')
-      var playedrange2= localStorage.getItem('playedrange2')
-      var range1= localStorage.getItem('range1')
-      var range2= localStorage.getItem('range2')
-      console.log(playedrange1,playedrange2, range1, range2)
-      console.log('doing')
-      if(range1!==playedrange1){
-        player.seekTo(parseInt(range1))
       }
     }, 10);
     </script>
